@@ -1,1 +1,1 @@
-nohup python3 -u backend/main.py >> ./TrWebOCR/ocr.log &
+nohup python3 -u backend/main.py >> ./ocr.log &
