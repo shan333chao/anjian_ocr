@@ -11,7 +11,6 @@ import tornado.ioloop
 import logging
 from tornado.web import StaticFileHandler
 
-from backend.webInterface import tr_run_my
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_PATH)
