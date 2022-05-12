@@ -11,6 +11,8 @@ import tornado.ioloop
 import logging
 from tornado.web import StaticFileHandler
 
+from backend.webInterface import tr_run_my
+
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_PATH)
 from backend.tools.get_host_ip import host_ip
@@ -28,11 +30,13 @@ settings = dict(
 
 
 def make_app():
+    from backend.webInterface import tr_run_my
     from backend.webInterface import tr_run
     from backend.webInterface import tr_index
 
     return tornado.web.Application([
         (r"/api/tr-run/", tr_run.TrRun),
+        (r"/api/tr-run2/", tr_run_my.TrRunMy),
         (r"/", tr_index.Index),
         (r"/(.*)", StaticFileHandler,
          {"path": os.path.join(current_path, "dist/TrWebOcr_fontend"), "default_filename": "index.html"}),

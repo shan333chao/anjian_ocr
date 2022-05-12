@@ -245,6 +245,37 @@ def run(img,
     return results
 
 
+def run2(img,
+        max_lines=512,
+        flag=FLAG_ROTATED_RECT,
+        max_width=512,
+        ctpn_id=0,
+        crnn_id=1):
+    rect_arr = np.zeros((max_lines, RECT_SIZE), dtype="float32")
+    unicode_arr = np.zeros((max_lines, max_width), dtype="int32")
+    prob_arr = np.zeros((max_lines, max_width), dtype="float32")
+    img = c_img(img)
+    line_num = _libc.tr_run(
+        ctpn_id, crnn_id,
+        img[0], img[1], img[2], img[3],
+        flag,
+        c_ptr(rect_arr),
+        max_lines,
+        c_ptr(unicode_arr),
+        c_ptr(prob_arr),
+        max_width
+    )
+
+    results = []
+    for i in range(line_num):
+        num = int(rect_arr[i][-1] + 0.5)
+        txt, confidence = _parse(unicode_arr[i], prob_arr[i], num)
+        if confidence==0:
+            continue
+        results.append((txt, round(confidence,5) ))
+
+    return results
+
 init(0, 0, "ctpn.bin")
 init(0, 1, "crnn.bin")
 
