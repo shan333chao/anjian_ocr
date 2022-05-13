@@ -272,7 +272,8 @@ def run2(img,
         txt, confidence = _parse(unicode_arr[i], prob_arr[i], num)
         if confidence==0:
             continue
-        results.append((txt, round(confidence,5) ))
+        print(rect_arr[i])
+        results.append((rect_arr[i][:5].tolist(),txt, round(confidence,5) ))
 
     return results
 
