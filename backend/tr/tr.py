@@ -280,7 +280,7 @@ def run2(img,
         
         print(f"1-4:{rect_arr[i][:4]}")
         print(f"5:{rect_arr[i][4]}")
-        x_y_w_h_d.append(rect_arr[i][5])
+        x_y_w_h_d.append(rect_arr[i][4])
 
         results.append((x_y_w_h_d,txt, round(confidence,5)))
 
