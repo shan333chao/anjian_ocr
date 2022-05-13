@@ -240,6 +240,8 @@ def run(img,
     for i in range(line_num):
         num = int(rect_arr[i][-1] + 0.5)
         txt, confidence = _parse(unicode_arr[i], prob_arr[i], num)
+        if confidence==0:
+            continue
         results.append((rect_arr[i][:5].tolist(), txt, confidence))
 
     return results
@@ -272,8 +274,7 @@ def run2(img,
         txt, confidence = _parse(unicode_arr[i], prob_arr[i], num)
         if confidence==0:
             continue
-        print(rect_arr[i])
-        results.append((rect_arr[i][:5].tolist(),txt, round(confidence,5) ))
+        results.append((rect_arr[i][:5].tolist(),txt, round(confidence,5)))
 
     return results
 
