@@ -275,13 +275,9 @@ def run2(img,
         if confidence==0:
             continue
         x_y_w_h_d=[]
-        for item in rect_arr[i][:4]:
+        for item in rect_arr[i][:5]:
+            print(f"{item}:{round(item,1)}")
             x_y_w_h_d.append(round(item,1))
-        
-        print(f"1-4:{rect_arr[i][:5]}")
-        print(f"5:{rect_arr[i][4]}")
-        x_y_w_h_d.append(rect_arr[i][4])
-
         results.append((x_y_w_h_d,txt, round(confidence,5)))
 
     return results
