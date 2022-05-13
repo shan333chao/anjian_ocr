@@ -134,8 +134,9 @@ class TrRun(tornado.web.RequestHandler):
                 cx, cy, w, h, a = rect
                 box = cv2.boxPoints(((cx, cy), (w, h), a))
                 box = np.int0(np.round(box))
-
+                
                 for p1, p2 in [(0, 1), (1, 2), (2, 3), (3, 0)]:
+                    print(f"{txt}:{box[p1][0], box[p1][1], box[p2][0], box[p2][1]}")
                     img_draw.line(xy=(box[p1][0], box[p1][1], box[p2][0], box[p2][1]), fill=colors[i % len(colors)],
                                   width=2)
 

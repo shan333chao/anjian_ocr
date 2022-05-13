@@ -46,8 +46,7 @@ class TrRunMy(tornado.web.RequestHandler):
 
         img_up = self.request.files.get('file', None)
         img_b64 = self.get_argument('img', None)
-        # compress_size = self.get_argument('compress', None)
-        # is_draw = self.get_argument("is_draw", None)
+        rotate_type = self.get_argument("rotate_type", 0)
 
         # 判断是上传的图片还是base64
         self.set_header('content-type', 'application/json')
@@ -66,43 +65,21 @@ class TrRunMy(tornado.web.RequestHandler):
             self.finish(json.dumps({'code': 400, 'msg': '没有传入参数'}, cls=NpEncoder))
             return
 
-        # 旋转图片
-        # try:
-        #     if hasattr(img, '_getexif') and img._getexif() is not None:
-        #         orientation = 274
-        #         exif = dict(img._getexif().items())
-        #         if orientation in exif:
-        #             if exif[orientation] == 3:
-        #                 img = img.rotate(180, expand=True)
-        #             elif exif[orientation] == 6:
-        #                 img = img.rotate(270, expand=True)
-        #             elif exif[orientation] == 8:
-        #                 img = img.rotate(90, expand=True)
-        # except Exception as ex:
-        #     error_log = json.dumps({'code': 400, 'msg': '产生了一点错误，请检查日志', 'err': str(ex)}, cls=NpEncoder)
-        #     logger.error(error_log, exc_info=True)
-        #     self.finish(error_log)
-        #     return
+        #旋转图片
+        try:
+            if rotate_type >0:
+                if rotate_type == 3:
+                    img = img.rotate(180, expand=True)
+                elif rotate_type == 6:
+                    img = img.rotate(270, expand=True)
+                elif rotate_type == 8:
+                    img = img.rotate(90, expand=True)
+        except Exception as ex:
+            error_log = json.dumps({'code': 400, 'msg': '旋转图片产生了一点错误，请检查日志', 'err': str(ex)}, ensure_ascii=False,cls=NpEncoder)
+            logger.error(error_log, exc_info=True)
+            self.finish(error_log)
+            return
         img = img.convert("RGB")
-
-        '''
-        是否开启图片压缩
-        默认为1600px
-        值为 0 时表示不开启压缩
-        非 0 时则压缩到该值的大小
-        '''
-        # if compress_size is not None:
-        #     try:
-        #         compress_size = int(compress_size)
-        #     except ValueError as ex:
-        #         logger.error(exc_info=True)
-        #         self.finish(json.dumps({'code': 400, 'msg': 'compress参数类型有误，只能是int类型'}, cls=NpEncoder))
-        #         return
-
-        #     if compress_size < 1:
-        #         MAX_SIZE = max(img.height, img.width)
-        #     else:
-        #         MAX_SIZE = compress_size
 
         if img.height > MAX_SIZE or img.width > MAX_SIZE:
             scale = max(img.height / MAX_SIZE, img.width / MAX_SIZE)
@@ -117,11 +94,6 @@ class TrRunMy(tornado.web.RequestHandler):
         response_data = {'code': 200, 'msg': '成功',
                          'data': {'raw_out': res,
                                   'speed_time': round(time.time() - start_time, 2)}}
-        # log_info = {
-        #     'ip': self.request.host,
-        #     'return': response_data,
-        #     'time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # }
-        # logger.info(json.dumps(log_info, cls=NpEncoder))
+
         self.finish(json.dumps(response_data, ensure_ascii=False,cls=NpEncoder))
         return
