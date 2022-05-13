@@ -4,3 +4,8 @@ rm -rf ocr.log
 echo "删除日志 等待3秒启动"
 sleep 3
 nohup python3 -u backend/main.py >> ./ocr.log &
+
+
+sleep 2
+echo "启动完成"
+tail -f ocr.log

@@ -278,7 +278,7 @@ def run2(img,
         for item in rect_arr[i][:4]:
             x_y_w_h_d.append(round(item,1))
         
-        print(f"1-4:{rect_arr[i][:4]}")
+        print(f"1-4:{rect_arr[i][:5]}")
         print(f"5:{rect_arr[i][4]}")
         x_y_w_h_d.append(rect_arr[i][4])
 
