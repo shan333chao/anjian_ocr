@@ -2,13 +2,15 @@
 import os
 import platform
 import ctypes
+from unicodedata import decimal
 import numpy as np
-
+from decimal import *
 try:
     unichr
 except NameError:
     unichr = chr
 
+getcontext().prec=1
 CV_8UC1 = 0
 CV_32FC1 = 5
 CV_8UC3 = 16
@@ -276,9 +278,11 @@ def run2(img,
             continue
         x_y_w_h_d=[]
         for item in rect_arr[i][:5]:
-            print(f"{item}:{round(item,1)}")
-            x_y_w_h_d.append(round(item,1))
+            rnd_num=float(Decimal(item).quantize(Decimal('0.0'))) 
+            print(f"{item}:{rnd_num}")
+            x_y_w_h_d.append(rnd_num)
         results.append((x_y_w_h_d,txt, round(confidence,5)))
+        
 
     return results
 
