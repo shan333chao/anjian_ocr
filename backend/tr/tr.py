@@ -243,7 +243,7 @@ def run(img,
         txt, confidence = _parse(unicode_arr[i], prob_arr[i], num)
         if confidence==0:
             continue
-        results.append((rect_arr[i][:5].tolist(), txt, confidence))
+        results.append((np.around(rect_arr[i][:5].tolist(),1),txt, round(confidence,5) ))
 
     return results
 
@@ -275,12 +275,7 @@ def run2(img,
         txt, confidence = _parse(unicode_arr[i], prob_arr[i], num)
         if confidence==0:
             continue
-        x_y_w_h_d=[]
-        for item in rect_arr[i][:5]:
-            rnd_num=float(Decimal(item).quantize(Decimal('0.0'))) 
-            print(f"{item}:{rnd_num}")
-            x_y_w_h_d.append(rnd_num)
-        results.append((x_y_w_h_d,txt, round(confidence,5)))
+        results.append((np.around(rect_arr[i][:5].tolist(),1),txt, round(confidence,5) ))
         
 
     return results
