@@ -274,7 +274,15 @@ def run2(img,
         txt, confidence = _parse(unicode_arr[i], prob_arr[i], num)
         if confidence==0:
             continue
-        results.append((rect_arr[i][:5].tolist(),txt, round(confidence,5)))
+        x_y_w_h_d=[]
+        for item in rect_arr[i][:4]:
+            x_y_w_h_d.append(round(item,1))
+        
+        print(f"1-4:{rect_arr[i][:4]}")
+        print(f"5:{rect_arr[i][4]}")
+        x_y_w_h_d.append(rect_arr[i][5])
+
+        results.append((x_y_w_h_d,txt, round(confidence,5)))
 
     return results
 
