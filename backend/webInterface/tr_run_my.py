@@ -40,10 +40,10 @@ class TrRunMy(tornado.web.RequestHandler):
                 if abs(raw_data[i][0][1] - nextLineHeight) < raw_data[i][0][3] / 2:
                     ocrText += raw_data[i][1]
                 else:
-                    arrdic[ocrText]= np.float32(re.findall(r"\d+\.?\d*", raw_data[i][1])[0])
+                    arrdic[ocrText]=np.around( np.float32(re.findall(r"\d+\.?\d*", raw_data[i][1])[0]),1)
                     ocrText=""
             else:
-                arrdic[ocrText]=np.float32(re.findall(r"\d+\.?\d*", raw_data[i][1])[0])
+                arrdic[ocrText]=np.around(np.float32(re.findall(r"\d+\.?\d*", raw_data[i][1])[0]),1)
         return arrdic
         
     def get(self):
