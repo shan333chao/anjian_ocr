@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw
 from io import BytesIO
 import datetime
 import json
-
+import re
 from backend.tools.np_encoder import NpEncoder
 from backend.tools import log
 import logging
@@ -27,7 +27,25 @@ class TrRunMy(tornado.web.RequestHandler):
     '''
     使用 tr 的 run 方法
     '''
-
+    def convert_fumo(raw_data):
+        # 下一行的高度
+        nextLineHeight = 0 
+        arrdic=dict()
+        ocrText = ""
+        for i in range(0,len(raw_data)):
+            # 合并同一行的数据
+            if i < len(raw_data) - 1:
+                nextLineHeight = raw_data[i + 1][0][1]
+                # 判断判断同一行的依据是 两段的行高差 小于 行高的一半
+                if abs(raw_data[i][0][1] - nextLineHeight) < raw_data[i][0][3] / 2:
+                    ocrText += raw_data[i][1]
+                else:
+                    arrdic[ocrText]= np.float32(re.findall(r"\d+\.?\d*", raw_data[i][1])[0])
+                    ocrText=""
+            else:
+                arrdic[ocrText]=np.float32(re.findall(r"\d+\.?\d*", raw_data[i][1])[0])
+        return arrdic
+        
     def get(self):
         self.set_status(404)
         self.write("404 : Please use POST")
@@ -47,6 +65,7 @@ class TrRunMy(tornado.web.RequestHandler):
         img_up = self.request.files.get('file', None)
         img_b64 = self.get_argument('img', None)
         rotate_type = self.get_argument("rotate_type", 0)
+        isfumo = self.get_argument("isfumo", 0)
 
         # 判断是上传的图片还是base64
         self.set_header('content-type', 'application/json')
@@ -90,9 +109,10 @@ class TrRunMy(tornado.web.RequestHandler):
 
         # 进行ocr
         res = tr.run2(img.copy().convert("L"), flag=tr.FLAG_ROTATED_RECT)
-
+        if isfumo==1:
+            res= TrRunMy.convert_fumo(res)
         response_data = {'code': 200, 'msg': '成功',
-                         'data': {'raw_out': res,
+                         'data': {'raw_out':  res,
                                   'speed_time': round(time.time() - start_time, 2)}}
 
         self.finish(json.dumps(response_data, ensure_ascii=False,cls=NpEncoder))
