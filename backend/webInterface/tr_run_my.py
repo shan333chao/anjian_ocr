@@ -64,8 +64,8 @@ class TrRunMy(tornado.web.RequestHandler):
 
         img_up = self.request.files.get('file', None)
         img_b64 = self.get_argument('img', None)
-        rotate_type = self.get_argument("rotate_type", 0)
-        isfumo = self.get_argument("isfumo", 0)
+        rotate_type = int(self.get_argument("rotate_type", "0"))
+        isfumo = int(self.get_argument("isfumo", "0"))
 
         # 判断是上传的图片还是base64
         self.set_header('content-type', 'application/json')
