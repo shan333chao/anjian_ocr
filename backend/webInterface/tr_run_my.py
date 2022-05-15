@@ -30,7 +30,7 @@ class TrRunMy(tornado.web.RequestHandler):
         if len(regex_val) == 0:
             return 0
         else:
-            return np.float32(regex_val[0])
+            return np.float16(regex_val[0])
 
     def convert_fumo(raw_data):
         # 下一行的高度
