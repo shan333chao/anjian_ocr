@@ -1,4 +1,6 @@
 import re
+import numpy as np 
+
 res = [
     [
         [
@@ -19,7 +21,7 @@ res = [
             20.6,
             0
         ],
-        "+16",
+        "+16.6",
         0.9998
     ],
     [
@@ -41,7 +43,7 @@ res = [
             20.6,
             0
         ],
-        "+34",
+        "+34.4",
         1
     ],
     [
@@ -63,11 +65,17 @@ res = [
             19.1,
             0
         ],
-        "+292",
+        "+292.5",
         0.90885
     ]
 ]
-
+def pick_number(numstr):
+    regex_val = re.findall(r"\d+\.?\d*", numstr)
+    if len(regex_val) == 0:
+        return 0
+    else:
+        np_arr=np.array(regex_val)
+        return np_arr.astype(float)[0]
 def convert_fumo(raw_data):
     # 下一行的高度
     nextLineHeight = 0 
@@ -81,10 +89,10 @@ def convert_fumo(raw_data):
             if abs(raw_data[i][0][1] - nextLineHeight) < raw_data[i][0][3] / 2:
                 ocrText += raw_data[i][1]
             else:
-                arrdic[ocrText]=  re.findall(r"\d+\.?\d*", raw_data[i][1])[0]
+                arrdic[ocrText]=pick_number(raw_data[i][1]) 
                 ocrText=""
         else:
-            arrdic[ocrText]=re.findall(r"\d+\.?\d*", raw_data[i][1])[0]
+            arrdic[ocrText]=pick_number(raw_data[i][1]) 
     return arrdic
         
         
