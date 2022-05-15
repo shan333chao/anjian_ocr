@@ -3,9 +3,7 @@
 # author:alisen
 # time: 2020/4/29 10:47
 
-from asyncio.windows_events import NULL
 import time
-import cv2
 import numpy as np
 from backend.tr import tr
 import tornado.web
@@ -14,7 +12,6 @@ import tornado.httpserver
 import base64
 from PIL import Image, ImageDraw
 from io import BytesIO
-import datetime
 import json
 import re
 from backend.tools.np_encoder import NpEncoder
