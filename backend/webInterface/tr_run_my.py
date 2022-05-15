@@ -3,6 +3,7 @@
 # author:alisen
 # time: 2020/4/29 10:47
 
+from asyncio.windows_events import NULL
 import time
 import cv2
 import numpy as np
@@ -27,12 +28,19 @@ class TrRunMy(tornado.web.RequestHandler):
     '''
     使用 tr 的 run 方法
     '''
+    def pick_number(numstr):
+        regex_val = re.findall(r"\d+\.?\d*", numstr)
+        if len(regex_val) == 0:
+            return 0
+        else:
+            return np.float32(regex_val[0])
+
     def convert_fumo(raw_data):
         # 下一行的高度
-        nextLineHeight = 0 
-        arrdic=dict()
+        nextLineHeight = 0
+        arrdic = dict()
         ocrText = ""
-        for i in range(0,len(raw_data)):
+        for i in range(0, len(raw_data)):
             # 合并同一行的数据
             if i < len(raw_data) - 1:
                 nextLineHeight = raw_data[i + 1][0][1]
@@ -40,12 +48,13 @@ class TrRunMy(tornado.web.RequestHandler):
                 if abs(raw_data[i][0][1] - nextLineHeight) < raw_data[i][0][3] / 2:
                     ocrText += raw_data[i][1]
                 else:
-                    arrdic[ocrText]=np.around( np.float32(re.findall(r"\d+\.?\d*", raw_data[i][1])[0]),1)
-                    ocrText=""
+                    arrdic[ocrText] = TrRunMy.pick_number(raw_data[i][1])
+                    ocrText = ""
             else:
-                arrdic[ocrText]=np.around(np.float32(re.findall(r"\d+\.?\d*", raw_data[i][1])[0]),1)
+                arrdic[ocrText] = TrRunMy.pick_number(raw_data[i][1])
+                ocrText = ""
         return arrdic
-        
+
     def get(self):
         self.set_status(404)
         self.write("404 : Please use POST")
@@ -80,13 +89,15 @@ class TrRunMy(tornado.web.RequestHandler):
             img = Image.open(BytesIO(raw_image))
         else:
             self.set_status(400)
-            logger.error(json.dumps({'code': 400, 'msg': '没有传入参数'}, cls=NpEncoder))
-            self.finish(json.dumps({'code': 400, 'msg': '没有传入参数'}, cls=NpEncoder))
+            logger.error(json.dumps(
+                {'code': 400, 'msg': '没有传入参数'}, cls=NpEncoder))
+            self.finish(json.dumps(
+                {'code': 400, 'msg': '没有传入参数'}, cls=NpEncoder))
             return
 
-        #旋转图片
+        # 旋转图片
         try:
-            if rotate_type >0:
+            if rotate_type > 0:
                 if rotate_type == 3:
                     img = img.rotate(180, expand=True)
                 elif rotate_type == 6:
@@ -94,7 +105,8 @@ class TrRunMy(tornado.web.RequestHandler):
                 elif rotate_type == 8:
                     img = img.rotate(90, expand=True)
         except Exception as ex:
-            error_log = json.dumps({'code': 400, 'msg': '旋转图片产生了一点错误，请检查日志', 'err': str(ex)}, ensure_ascii=False,cls=NpEncoder)
+            error_log = json.dumps({'code': 400, 'msg': '旋转图片产生了一点错误，请检查日志', 'err': str(
+                ex)}, ensure_ascii=False, cls=NpEncoder)
             logger.error(error_log, exc_info=True)
             self.finish(error_log)
             return
@@ -109,11 +121,12 @@ class TrRunMy(tornado.web.RequestHandler):
 
         # 进行ocr
         res = tr.run2(img.copy().convert("L"), flag=tr.FLAG_ROTATED_RECT)
-        if isfumo==1:
-            res= TrRunMy.convert_fumo(res)
+        if isfumo == 1:
+            res = TrRunMy.convert_fumo(res)
         response_data = {'code': 200, 'msg': '成功',
                          'data': {'raw_out':  res,
                                   'speed_time': round(time.time() - start_time, 2)}}
 
-        self.finish(json.dumps(response_data, ensure_ascii=False,cls=NpEncoder))
+        self.finish(json.dumps(response_data,
+                    ensure_ascii=False, cls=NpEncoder))
         return
