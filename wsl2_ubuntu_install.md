@@ -8,9 +8,8 @@
         cp wsl.conf /etc/wsl.conf
 
 ###3.修改wsl ubuntu 源
-
-        cp /etc/apt/sources.list /etc/apt/sources.list_backup
-        cp -f ubuntu_source.txt /etc/apt/sources.list
+        sudo sed -i "s@http://.*archive.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list
+        sudo sed -i "s@http://.*security.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list
         apt update
 
 ##3.1 安装网络组件
@@ -85,4 +84,9 @@
     docker build -t anjian_ocr:latest .
 
     docker run -itd --rm -p 8989:8989 --name anjian_ocr anjian_ocr:latest 
+
+
+###6 运行端口同步
+
+        ps wsl2-network.ps1
 
