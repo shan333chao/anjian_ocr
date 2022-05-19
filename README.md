@@ -1,11 +1,17 @@
 # TrWebOCR-开源的离线OCR  
 
 ## 介绍
+
 anjian_ocr，基于开源项目 [TrWebOCR](https://gitee.com/alisen39/TrWebOCR) 构建。  
+
 在其基础上修改了dockerfile，便于你在docker中自己构建。 
+
 修改了接口返回的小数精度 
+
 添加了更适合手机端脚本调用的接口 /api/tr-run2/
+
 修改了默认启动端口为8989
+
 过滤了可信度为0的识别结果
 
 ![web页面](https://images.alisen39.com/20200517184619.png)  
@@ -139,9 +145,9 @@ res = requests.post(url=url, data={'img': img_b64})
 Apache 2.0
 
 ## 鸣谢
-* 感谢 [myhub](https://github.com/myhub) 和它的开源项目[Tr](https://github.com/myhub/tr) 
+* 感谢 [myhub](https://github.com/myhub) 和它的开源项目[Tr](https://github.com/myhub/tr)  
+* 感谢 [alisen39](https://github.com/alisen39) 和它的开源项目 [TrWebOCR](https://gitee.com/alisen39/TrWebOCR) 
 
 ## 最后  
-项目在 [GitHub](https://github.com/alisen39/TrWebOCR) 和 [码云](https://gitee.com/alisen39/TrWebOCR) 上同步更新，国内朋友可以通过码云clone项目~  
-  
+项目在上https://gitee.com/baramongan/TrWebOCR_anjian 同步更新， 可以通过码云clone项目~   
 如果你也喜欢这个项目，不妨给个star (^.^)✨
