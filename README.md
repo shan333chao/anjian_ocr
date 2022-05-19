@@ -1,9 +1,12 @@
 # TrWebOCR-开源的离线OCR  
 
 ## 介绍
-TrWebOCR，基于开源项目 [Tr](https://github.com/myhub/tr) 构建。  
-在其基础上提供了http调用的接口，便于你在其他的项目中调用。  
-并且提供了易于使用的web页面，便于调试或日常使用。   
+anjian_ocr，基于开源项目 [TrWebOCR](https://gitee.com/alisen39/TrWebOCR) 构建。  
+在其基础上修改了dockerfile，便于你在docker中自己构建。 
+修改了接口返回的小数精度 
+添加了更适合手机端脚本调用的接口 /api/tr-run2/
+修改了默认启动端口为8989
+过滤了可信度为0的识别结果
 
 ![web页面](https://images.alisen39.com/20200517184619.png)  
 
@@ -46,17 +49,17 @@ pip install -r requirements.txt
 ```  
 
 3. 运行  
-项目默认运行在8089端口，默认不开启gpu：  
+项目默认运行在8989端口，默认不开启gpu：  
 ``` shell script
-python backend/main.py [--port=8089][--open_gpu=0]
-# --port 指定运行时端口号 默认是8089  
+python backend/main.py [--port=8989][--open_gpu=0]
+# --port 指定运行时端口号 默认是8989  
 # --open_gpu 是否开启gpu 默认是0(不开启），可设置为1（开启）
 ```
 
 看到以下输出则代表安装成功： 
 ```shell script
 tr 2.3.0 https://github.com/myhub/tr
-Server is running: http://192.168.31.95:8089
+Server is running: http://192.168.31.95:8989
 Now version is: cpu
 ```   
 
@@ -64,10 +67,10 @@ Now version is: cpu
 使用 Dockerfile 构建 或者直接 Pull镜像  
 ```shell script
 # dockerfile 构建
-docker build -t trwebocr:latest .
-
+docker build -t anjian_ocr:latest .
+    
 # 运行镜像
-docker run -itd --rm -p 8089:8089 --name trwebocr trwebocr:latest 
+docker run -itd --rm -p 8989:8989 --name anjian_ocr anjian_ocr:latest
 ```  
 
 ```shell script
@@ -75,9 +78,9 @@ docker run -itd --rm -p 8089:8089 --name trwebocr trwebocr:latest
 docker pull mmmz/trwebocr:latest
 
 # 运行镜像
-docker run -itd --rm -p 8089:8089 --name trwebocr mmmz/trwebocr:latest 
+docker run -itd --rm -p 8989:8989 --name trwebocr mmmz/trwebocr:latest 
 ```  
-这里把容器的8089端口映射到了物理机的8089上，但如果你不喜欢映射，去掉run后面的`-p 8089:8089` 也可以使用docker的IP加`8089`来访问  
+这里把容器的8989端口映射到了物理机的8989上，但如果你不喜欢映射，去掉run后面的`-p 8989:8989` 也可以使用docker的IP加`8989`来访问  
 
 ## 接口文档  
 接口文档的内容放在了本项目的wiki里：  
@@ -87,7 +90,7 @@ docker run -itd --rm -p 8089:8089 --name trwebocr mmmz/trwebocr:latest
 * Python 使用File上传文件  
 ``` python
 import requests
-url = 'http://192.168.31.108:8089/api/tr-run/'
+url = 'http://192.168.31.108:8989/api/tr-run2/'
 img1_file = {
     'file': open('img1.png', 'rb')
 }
@@ -103,7 +106,7 @@ def img_to_base64(img_path):
         b64 = base64.b64encode(read.read())
     return b64
     
-url = 'http://192.168.31.108:8089/api/tr-run/'
+url = 'http://192.168.31.108:8989/api/tr-run2/'
 img_b64 = img_to_base64('./img1.png')
 res = requests.post(url=url, data={'img': img_b64})
 ```
