@@ -13,6 +13,10 @@
         cp -f ubuntu_source.txt /etc/apt/sources.list
         apt update
 
+##3.1 安装网络组件
+
+        cp wsl2-network.ps1 C:\Windows\System32\wsl2-network.ps1
+
 ###4.修改Python源
 
         apt install python3-pip
@@ -78,7 +82,7 @@
 
 ###5 构建docker 环境
 
-    docker build -t trwebocr:latest .
+    docker build -t anjian_ocr:latest .
 
-    docker run -itd --rm -p 8089:8089 --name trwebocr trwebocr:latest 
+    docker run -itd --rm -p 8989:8989 --name anjian_ocr anjian_ocr:latest 
 
