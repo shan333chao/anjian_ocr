@@ -4,7 +4,7 @@
         git clone https://gitee.com/baramongan/TrWebOCR_anjian.git
 
 ###1.修改wsl版本
-        sed -i 's#/usr/lib/wsl/lib#/usr/lib/wsl/lib2' /etc/ld.so.conf.d/ld.wsl.conf
+        sed -i 's#/usr/lib/wsl/lib#/usr/lib/wsl/lib2#g' /etc/ld.so.conf.d/ld.wsl.conf
         cp wsl.conf /etc/wsl.conf
 
 ###3.修改wsl ubuntu 源
