@@ -1,0 +1,21 @@
+
+
+###1.拉取代码
+        git clone https://gitee.com/baramongan/TrWebOCR_anjian.git
+
+###1.修改wsl版本
+        sed -i 's#/usr/lib/wsl/lib#/usr/lib/wsl/lib2' /etc/ld.so.conf.d/ld.wsl.conf
+        cp wsl.conf /etc/wsl.conf
+
+###3.修改wsl ubuntu 源
+
+        cp /etc/apt/sources.list /etc/apt/sources.list_backup
+        cp  ubuntu_source.txt /etc/apt/sources.list
+        apt update
+
+###4.修改Python源
+    
+        pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+
