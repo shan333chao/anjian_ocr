@@ -10,7 +10,7 @@
 ###3.修改wsl ubuntu 源
 
         cp /etc/apt/sources.list /etc/apt/sources.list_backup
-        cp  ubuntu_source.txt /etc/apt/sources.list
+        cp -f ubuntu_source.txt /etc/apt/sources.list
         apt update
 
 ###4.修改Python源
@@ -62,10 +62,23 @@
         sudo apt-get install docker-ce=5:20.10.16~3-0~ubuntu-focal docker-ce-cli=5:20.10.16~3-0~ubuntu-focal containerd.io docker-compose-plugin
 
 4.10.1 修改docker 源
+    mkdir -p /etc/docker/
+    touch /etc/docker/daemon.json
+    cp -f docker_deamon.json /etc/docker/daemon.json
 
-    cp /etc/docker/daemon.json /etc/docker/daemon.json.bak
-    cp -f docker_daemon.json /etc/docker/daemon.json
+4.10.2 启动docker服务
+
+    service docker start
+
 
 4.11 启动一个 hello-world 镜像  测试安装效果
 
     docker run hello-world
+
+
+###5 构建docker 环境
+
+    docker build -t trwebocr:latest .
+
+    docker run -itd --rm -p 8089:8089 --name trwebocr trwebocr:latest 
+
