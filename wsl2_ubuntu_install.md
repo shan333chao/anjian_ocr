@@ -1,5 +1,3 @@
-
-
 ###1.拉取代码
         git clone https://gitee.com/baramongan/TrWebOCR_anjian.git
 
@@ -13,12 +11,31 @@
         sudo sed -i "s@http://.*security.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list
         apt update
 
+###3.1 安装ssh
 
+        apt-get remove -y openssh-server
+        apt-get install -y openssh-server
+        sudo sed -i "s@#Port 22@Port 22@g" /etc/ssh/sshd_config
+        sudo sed -i "s@PasswordAuthentication no@PasswordAuthentication yes@g" /etc/ssh/sshd_config
+        sudo sed -i "s@#ListenAddress 0.0.0.0@ListenAddress 0.0.0.0@g" /etc/ssh/sshd_config
+        sudo sed -i "s@#PermitRootLogin prohibit-password@PermitRootLogin yes@g" /etc/ssh/sshd_config
+        service ssh restart
 
+####3.1.1 映射wsl 端口到物理机
+
+        apt install -y net-tools
+
+        在pose人shell 中运行
+        . wsl2-network.ps1
+
+        ssh-server安装完成
+
+        
 ###4.修改Python源
 
-        apt install python3-pip
+        apt install -y python3-pip
         pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+        
 
 
 ###4.安装docker 
