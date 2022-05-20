@@ -79,5 +79,6 @@
 
 
 ###6 运行端口同步
-    . wsl2-network.ps1
+
+        . wsl2-network.ps1
 
