@@ -63,19 +63,19 @@
 
 4.5 修改docker 源
 
-    mkdir -p /etc/docker/
-    touch /etc/docker/daemon.json
-    cp -f docker_deamon.json /etc/docker/daemon.json
+        mkdir -p /etc/docker/
+        touch /etc/docker/daemon.json
+        cp -f docker_deamon.json /etc/docker/daemon.json
 
 4.6 启动docker服务
 
-    service docker start
+        service docker start
 
 ###5 构建docker 环境
 
-    docker build -t anjian_ocr:latest .
+        docker build -t anjian_ocr:latest .
 
-    docker run -itd --rm -p 8989:8989 --name anjian_ocr anjian_ocr:latest 
+        docker run -itd --rm -p 8989:8989 --name anjian_ocr anjian_ocr:latest 
 
 
 ###6 运行端口同步
