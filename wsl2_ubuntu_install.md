@@ -8,13 +8,12 @@
         cp wsl.conf /etc/wsl.conf
 
 ###3.修改wsl ubuntu 源
+        sudo cp -a /etc/apt/sources.list /etc/apt/sources.list.bak
         sudo sed -i "s@http://.*archive.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list
         sudo sed -i "s@http://.*security.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list
         apt update
 
-##3.1 安装网络组件
 
-        cp wsl2-network.ps1 C:\Windows\System32\wsl2-network.ps1
 
 ###4.修改Python源
 
