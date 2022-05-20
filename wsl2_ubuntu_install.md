@@ -1,11 +1,14 @@
 ###1.拉取代码
+
         git clone https://gitee.com/baramongan/TrWebOCR_anjian.git
 
 ###1.修改wsl版本
+
         sed -i 's#/usr/lib/wsl/lib#/usr/lib/wsl/lib2#g' /etc/ld.so.conf.d/ld.wsl.conf
         cp wsl.conf /etc/wsl.conf
 
 ###3.修改wsl ubuntu 源
+
         sudo cp -a /etc/apt/sources.list /etc/apt/sources.list.bak
         sudo sed -i "s@http://.*archive.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list
         sudo sed -i "s@http://.*security.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list
@@ -40,60 +43,33 @@
 
 ###4.安装docker 
 
-4.1卸载旧版软件
+4.1若您安装过docker，需要先删掉，之后再安装依赖:
 
-        sudo apt-get remove docker docker-engine docker.io containerd runc
+        sudo apt-get  remove -y docker docker-engine docker.io
+        sudo apt-get  install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common
 
-4.2更新源
+4.2 信任Docker的GPG公钥::
 
-            apt-get update
+       curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
 
-4.5安装依赖
+4.3 设置docker 源
 
-            sudo apt-get install \
-        ca-certificates \
-        curl \
-        gnupg \
-        lsb-release
+        sudo add-apt-repository "deb [arch=amd64] https://repo.huaweicloud.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
 
-4.6 Docker’s official GPG key:
-
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-
-4.7 设置docker 源
-
-            echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-4.8 Install Docker Engine
+4.4 Install Docker Engine
 
         sudo apt-get update
-        sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+        sudo apt-get install docker-ce
 
-4.9 查看docker engine 版本列表 选择一个
+4.5 修改docker 源
 
-        apt-cache madison docker-ce
-
-
-4.10 安装一个版本
-
-        sudo apt-get install docker-ce=5:20.10.16~3-0~ubuntu-focal docker-ce-cli=5:20.10.16~3-0~ubuntu-focal containerd.io docker-compose-plugin
-
-4.10.1 修改docker 源
     mkdir -p /etc/docker/
     touch /etc/docker/daemon.json
     cp -f docker_deamon.json /etc/docker/daemon.json
 
-4.10.2 启动docker服务
+4.6 启动docker服务
 
     service docker start
-
-
-4.11 启动一个 hello-world 镜像  测试安装效果
-
-    docker run hello-world
-
 
 ###5 构建docker 环境
 
@@ -103,6 +79,5 @@
 
 
 ###6 运行端口同步
-
-        ps wsl2-network.ps1
+    . wsl2-network.ps1
 
