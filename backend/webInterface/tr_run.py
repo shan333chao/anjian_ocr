@@ -15,12 +15,18 @@ from PIL import Image, ImageDraw
 from io import BytesIO
 import datetime
 import json
-
+from loguru import logger
 from backend.tools.np_encoder import NpEncoder
 from backend.tools import log
 import logging
 
-logger = logging.getLogger(log.LOGGER_ROOT_NAME + '.' + __name__)
+
+logger.add("trrun_log_{time}.log",
+                  rotation="500MB",
+                  encoding="utf-8",
+                  enqueue=True,
+                  compression="zip",
+                  retention="10 days")
 
 
 class TrRun(tornado.web.RequestHandler):

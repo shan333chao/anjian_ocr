@@ -16,9 +16,14 @@ import json
 import re
 from backend.tools.np_encoder import NpEncoder
 from backend.tools import log
-import logging
+from loguru import logger
 
-logger = logging.getLogger(log.LOGGER_ROOT_NAME + '.' + __name__)
+logger.add("trrun2_log_{time}.log",
+                  rotation="500MB",
+                  encoding="utf-8",
+                  enqueue=True,
+                  compression="zip",
+                  retention="10 days")
 
 
 class TrRunMy(tornado.web.RequestHandler):
@@ -50,8 +55,11 @@ class TrRunMy(tornado.web.RequestHandler):
                     arrdic[ocrText] = TrRunMy.pick_number(raw_data[i][1])
                     ocrText = ""
             else:
+                if ":" in ocrText:
+                    ocrText="词条"
                 arrdic[ocrText] = TrRunMy.pick_number(raw_data[i][1])
                 ocrText = ""
+                
         return arrdic
 
     def get(self):

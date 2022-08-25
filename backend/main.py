@@ -8,9 +8,8 @@ from tornado.options import define, options
 import tornado.web
 import tornado.httpserver
 import tornado.ioloop
-import logging
 from tornado.web import StaticFileHandler
-
+from loguru import logger
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_PATH)
@@ -19,7 +18,12 @@ from backend.tools import manage_running_platform
 from backend.tools import log
 
 
-logger = logging.getLogger(log.LOGGER_ROOT_NAME + '.' + __name__)
+logger.add("main_log_{time}.log",
+                  rotation="500MB",
+                  encoding="utf-8",
+                  enqueue=True,
+                  compression="zip",
+                  retention="10 days")
 
 current_path = os.path.dirname(__file__)
 settings = dict(
@@ -61,8 +65,9 @@ if __name__ == "__main__":
     # server.listen(port)
     server.bind(port)
     server.start(1)
-    print(f'Server is running: http://{host_ip()}:{port}')
-    print(f'Now version is: {manage_running_platform.get_run_version()}')
+    
+    logger.info(f'Server is running: http://{host_ip()}:{port}')
+    logger.success(f'Now version is: {manage_running_platform.get_run_version()}')
 
     # tornado.ioloop.IOLoop.instance().start()
     tornado.ioloop.IOLoop.current().start()

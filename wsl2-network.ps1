@@ -1,3 +1,14 @@
+
+$currentWi = [Security.Principal.WindowsIdentity]::GetCurrent()
+$currentWp = [Security.Principal.WindowsPrincipal]$currentWi
+if( -not $currentWp.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+{
+    $boundPara = ($MyInvocation.BoundParameters.Keys | foreach{'-{0} {1}' -f  $_ ,$MyInvocation.BoundParameters[$_]} ) -join ' '
+    $currentFile = $MyInvocation.MyCommand.Definition
+    $fullPara = $boundPara + ' ' + $args -join ' '
+    Start-Process "$psHome\powershell.exe"   -ArgumentList "$currentFile $fullPara"   -verb runas
+    return
+}
 $remoteport = bash.exe -c "ifconfig eth0 | grep 'inet '"
 $found = $remoteport -match '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}';
  
