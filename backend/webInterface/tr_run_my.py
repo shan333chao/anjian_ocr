@@ -118,9 +118,7 @@ class TrRunMy(tornado.web.RequestHandler):
         res = tr.run2(img.copy().convert("L"), flag=tr.FLAG_ROTATED_RECT)
         if isfumo == 1:
             res = TrRunMy.convert_readable(res)
-        response_data = {'code': 200, 'msg': '成功',
-                         'data': {'raw_out':  res,
-                                  'speed_time': round(time.time() - start_time, 2)}}
+        response_data = {'code': 200, 'message': '成功','data': res}
 
         self.finish(json.dumps(response_data,
                     ensure_ascii=False, cls=NpEncoder))
