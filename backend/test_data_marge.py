@@ -69,33 +69,16 @@ res = [
         0.90885
     ]
 ]
-def pick_number(numstr):
-    regex_val = re.findall(r"\d+\.?\d*", numstr)
-    if len(regex_val) == 0:
-        return 0
-    else:
-        np_arr=np.array(regex_val)
-        return np_arr.astype(float)[0]
-def convert_fumo(raw_data):
-    # 下一行的高度
-    nextLineHeight = 0 
-    arrdic=dict()
-    ocrText = ""
+def convert_fumo(raw_data): 
+    arrdic=[]
     for i in range(0,len(raw_data)):
-        # 合并同一行的数据
-        if i < len(raw_data) - 1:
-            nextLineHeight = raw_data[i + 1][0][1]
-            # 判断判断同一行的依据是 两段的行高差 小于 行高的一半
-            if abs(raw_data[i][0][1] - nextLineHeight) < raw_data[i][0][3] / 2:
-                ocrText += raw_data[i][1]
-            else:
-                arrdic[ocrText]=pick_number(raw_data[i][1]) 
-                ocrText=""
-        else:
-            arrdic[ocrText]=pick_number(raw_data[i][1]) 
+        item={
+            "Point":raw_data[i][0][:-1],
+            "Text":raw_data[i][1],
+            "Score":raw_data[i][2]
+        }
+        arrdic.append(item) 
     return arrdic
-        
-        
 fumo_res=convert_fumo(res)
 
 

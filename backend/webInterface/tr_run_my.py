@@ -39,27 +39,15 @@ class TrRunMy(tornado.web.RequestHandler):
             return np_arr.astype(float)[0]
 
 
-    def convert_fumo(raw_data):
-        # 下一行的高度
-        nextLineHeight = 0
-        arrdic = dict()
-        ocrText = ""
-        for i in range(0, len(raw_data)):
-            # 合并同一行的数据
-            if i < len(raw_data) - 1:
-                nextLineHeight = raw_data[i + 1][0][1]
-                # 判断判断同一行的依据是 两段的行高差 小于 行高的一半
-                if abs(raw_data[i][0][1] - nextLineHeight) < raw_data[i][0][3] / 2:
-                    ocrText += raw_data[i][1]
-                else:
-                    arrdic[ocrText] = TrRunMy.pick_number(raw_data[i][1])
-                    ocrText = ""
-            else:
-                if ":" in ocrText:
-                    ocrText="词条"
-                arrdic[ocrText] = TrRunMy.pick_number(raw_data[i][1])
-                ocrText = ""
-                
+    def convert_readable(raw_data): 
+        arrdic=[]
+        for i in range(0,len(raw_data)):
+            item={
+                "Point":raw_data[i][0][:-1],
+                "Text":raw_data[i][1],
+                "Score":raw_data[i][2]
+            }
+            arrdic.append(item) 
         return arrdic
 
     def get(self):
@@ -129,7 +117,7 @@ class TrRunMy(tornado.web.RequestHandler):
         # 进行ocr
         res = tr.run2(img.copy().convert("L"), flag=tr.FLAG_ROTATED_RECT)
         if isfumo == 1:
-            res = TrRunMy.convert_fumo(res)
+            res = TrRunMy.convert_readable(res)
         response_data = {'code': 200, 'msg': '成功',
                          'data': {'raw_out':  res,
                                   'speed_time': round(time.time() - start_time, 2)}}
