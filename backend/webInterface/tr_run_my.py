@@ -19,35 +19,36 @@ from backend.tools import log
 from loguru import logger
 
 logger.add("trrun2_log_{time}.log",
-                  rotation="500MB",
-                  encoding="utf-8",
-                  enqueue=True,
-                  compression="zip",
-                  retention="10 days")
+           rotation="500MB",
+           encoding="utf-8",
+           enqueue=True,
+           compression="zip",
+           retention="10 days")
 
 
 class TrRunMy(tornado.web.RequestHandler):
     '''
     使用 tr 的 run 方法
     '''
+
     def pick_number(numstr):
         regex_val = re.findall(r"\d+\.?\d*", numstr)
         if len(regex_val) == 0:
             return 0
         else:
-            np_arr=np.array(regex_val)
+            np_arr = np.array(regex_val)
             return np_arr.astype(float)[0]
 
-
-    def convert_readable(raw_data): 
-        arrdic=[]
-        for i in range(0,len(raw_data)):
-            item={
-                "Point":raw_data[i][0][:-1],
-                "Text":raw_data[i][1],
-                "Score":raw_data[i][2]
+    def convert_readable(raw_data):
+        pattern = re.compile(r'[^\u4e00-\u9fa5]')
+        arrdic = []
+        for i in range(0, len(raw_data)):
+            item = {
+                "Point": raw_data[i][0][:-1],
+                "Text": re.sub(pattern, '', raw_data[i][1]),
+                "Score": raw_data[i][2]
             }
-            arrdic.append(item) 
+            arrdic.append(item)
         return arrdic
 
     def get(self):
@@ -118,8 +119,8 @@ class TrRunMy(tornado.web.RequestHandler):
         res = tr.run2(img.copy().convert("L"), flag=tr.FLAG_ROTATED_RECT)
         if isfumo == 1:
             res = TrRunMy.convert_readable(res)
-        response_data = {'code': 200, 'message': 'success','data': res}
+        response_data = {'code': 200, 'message': 'success', 'data': res}
 
         self.finish(json.dumps(response_data,
-                    ensure_ascii=False, cls=NpEncoder))
+                               ensure_ascii=False, cls=NpEncoder))
         return
